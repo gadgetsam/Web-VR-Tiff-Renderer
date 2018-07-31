@@ -1,8 +1,19 @@
 from flask import Flask, render_template
 app = Flask(__name__)
+import tkinter as tk
+from tkinter import filedialog
+import urllib
+
+
 
 @app.route('/')
 def homepage():
     return render_template('index.html')
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True, port=80)
+
+def start():
+    app.run(debug=True, use_reloader=False, port=80)
+
+
+
+
+

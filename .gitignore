@@ -60,3 +60,5 @@ target/
 static/wing/
 
 \.idea/
+
+static/test/

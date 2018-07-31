@@ -41,6 +41,7 @@
                 "}\r\n";
   }
 window.addEventListener('DOMContentLoaded', function(){
+    console.log(configuration)
   var scaleUp = false;
   var scaleDown = false;
   var leftMovement = false;
