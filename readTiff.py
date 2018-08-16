@@ -6,7 +6,7 @@ from scipy import misc, ndimage, io
 import ntpath
 ntpath.basename("a/b/c")
 import json
-def readTiff(filepath):
+def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
     try:
         shutil.rmtree("static/data/test")
     except:
@@ -19,9 +19,7 @@ def readTiff(filepath):
         os.mkdir("static/data/"+filename)
     except:
         pass
-    infoFile = {"numImages":im.n_frames, "height":im.height, "width":im.width}
-    with open("static/test.js", 'w') as outfile:
-        outfile.write("var configuration ="+str(json.dumps(infoFile)))
+
     h,w = im.width, im.height
     tiffarray = np.zeros((w, h, im.n_frames))
 
@@ -34,12 +32,16 @@ def readTiff(filepath):
     except EOFError:
         pass # end of sequence
     dim = tiffarray.shape
-    for x in range(3):
-        os.mkdir("static/data/" + filename + "/" + str(x))
-        for i in range(1,dim[x]+1):
+    if onlyOneFile:
+        misc.imsave("static/data/"+filename+"/"+str(1)+".png", simple_slice(tiffarray, math.floor(dim[axis]/2), axis))
+    else:
+        for i in range(1, dim[axis]+1):
+            updater.setValue(1/(dim[axis]+1))
+            misc.imsave("static/data/"+filename+"/"+str(i)+".png", simple_slice(tiffarray, i-1, axis))
 
-            misc.imsave("static/data/"+filename+"/"+str(x)+"/"+str(i)+".png", simple_slice(tiffarray, i-1, x))
-
+    infoFile = {"numImages":dim[axis]+1, "height":simple_slice(tiffarray, 0, axis), "width":simple_slice(tiffarray, 0, axis)}
+    with open("static/test.js", 'w') as outfile:
+        outfile.write("var configuration ="+str(json.dumps(infoFile)))
     # print(tiffarray)
     return filename
 def path_leaf(path):
@@ -51,5 +53,5 @@ def simple_slice(arr, inds, axis):
     sl = [slice(None)] * arr.ndim
     sl[axis] = inds
     return arr[sl]
-readTiff("butterfly_wing_small.tif")
+# readTiff("butterfly_wing_small.tif")
 

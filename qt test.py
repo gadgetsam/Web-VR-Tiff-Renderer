@@ -14,96 +14,140 @@ Last edited: August 2017
 """
 
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
-                             QAction, QFileDialog, QApplication, QLabel, QProgressBar,QWidget, QPushButton,
+                             QAction, QFileDialog, QApplication, QLabel, QProgressBar,QWidget, QPushButton, QLineEdit,
     QFrame, QApplication)
 from PyQt5.QtGui import QIcon, QPixmap
 import PyQt5.QtGui
 import sys
-
+# import readTiff
 
 class Example(QMainWindow):
 
     def __init__(self):
         super().__init__()
-
+        self.currentAxis = 0
         self.initUI()
 
     def initUI(self):
+        self.fname= [False]
 
-
+        self.test = False
         self.statusBar()
 
         openFile = QAction(QIcon('open.png'), 'Open', self)
         openFile.setShortcut('Ctrl+O')
         openFile.setStatusTip('Open new File')
+
         openFile.triggered.connect(self.showDialog)
-        redb = QPushButton('Red', self)
-        redb.setCheckable(True)
-        redb.move(10, 40)
+        self.statusBar().showMessage('Current Axis is X')
 
-        redb.clicked[bool].connect(self.setColor)
+        self.xB = QPushButton('X', self)
+        self.xB.setCheckable(True)
+        # self.xB.toggle()
+        self.xB.move(10, 40)
+        self.xB.setCheckable(False)
 
-        greenb = QPushButton('Green', self)
-        greenb.setCheckable(True)
-        greenb.move(10, 90)
+        self.xB.clicked.connect(self.changeAxis)
 
-        greenb.clicked[bool].connect(self.setColor)
+        self.yB = QPushButton('Y', self)
+        self.yB.setCheckable(True)
+        self.yB.move(10, 90)
+        self.yB.setCheckable(False)
 
-        blueb = QPushButton('Blue', self)
-        blueb.setCheckable(True)
-        blueb.move(10, 140)
+        self.yB.clicked.connect(self.changeAxis)
 
-        blueb.clicked[bool].connect(self.setColor)
+        self.zB = QPushButton('Z', self)
+        self.zB.setCheckable(True)
+        self.zB.move(10, 140)
+        self.zB.setCheckable(False)
+        self.zB.clicked.connect(self.changeAxis)
+        self.genB = QPushButton('Generate', self)
+        self.genB.setCheckable(True)
+        self.genB.move(10, 190)
+
+
+        self.genB.clicked.connect(self.changeAxis)
         self.progress = QProgressBar(self)
+        self.progress.setValue(0)
         self.progress.setGeometry(10, 300, 475, 20)
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openFile)
         self.label = QLabel(self)
         self.label.setGeometry(200, 40, 250, 250)
-        self.setGeometry(300, 550, 470, 350)
+        self.setGeometry(300, 550, 490, 350)
         self.setWindowTitle('File dialog')
+        self.xyzB = [self.xB, self.yB, self.zB]
         self.show()
 
     def showDialog(self):
-        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
 
-        if fname[0]:
-            f = open(fname[0], 'r')
+        if self.fname[0]:
+            if self.test!= True:
+                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis)
 
 
 
 
-            # with f:
-            #     data = f.read()
 
-            pixmap = QPixmap(fname[0])
-            self.label.setPixmap(pixmap)
+
+                pixmap = QPixmap("static/data/1.png")
+                self.label.setPixmap(pixmap)
 
             # self.resize(pixmap.width(), pixmap.height())
 
 
-            self.show()
+                self.show()
                 # self.textEdit.setText(data)
+    def reGenAxis(self, axis):
+        if self.fname[0]:
+            if self.test!= True:
+                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=axis)
 
-    def setColor(self, pressed):
+
+
+
+
+
+                pixmap = QPixmap("static/data/1.png")
+                self.label.setPixmap(pixmap)
+
+            # self.resize(pixmap.width(), pixmap.height())
+
+
+                self.show()
+    def genFull(self, pressed):
+        readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis, updater = self.progress)
+
+    def changeAxis(self, pressed):
 
         source = self.sender()
 
-        if pressed:
-            val = 255
-        else:
-            val = 0
+        # source.toggle()
+        if source.text() == "X":
+            self.statusBar().showMessage('Current Dimension is X')
+            self.reGenAxis(0)
 
-        if source.text() == "Red":
-            self.col.setRed(val)
-        elif source.text() == "Green":
-            self.col.setGreen(val)
-        else:
-            self.col.setBlue(val)
+            self.currentAxis = 0
 
-        self.square.setStyleSheet("QFrame { background-color: %s }" %
-                                  self.col.name())
+        if source.text() == "Y":
+            # if self.currentAxis == 1:
+            #     print(self.currentAxis)
+                # self.xyzB[self.currentAxis].toggle()
+            self.reGenAxis(1)
+            self.statusBar().showMessage('Current Dimension is Y')
+            self.currentAxis = 1
+
+        if source.text() == "Z":
+
+            # if self.currentAxis == 2:
+                # self.xyzB[self.currentAxis].toggle()
+            self.reGenAxis(2)
+            self.statusBar().showMessage('Current Dimension is Z')
+            self.currentAxis = 2
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Example()
