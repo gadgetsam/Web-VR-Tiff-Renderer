@@ -66,8 +66,10 @@ window.addEventListener('DOMContentLoaded', function () {
         // sphere.material.disableLighting = true;
 
 
-        var environment = scene.createDefaultEnvironment({groundYBias: 1});
-        environment.setMainColor(BABYLON.Color3.FromHexString("#74b9ff"))
+        // var environment = scene.createDefaultEnvironment({groundYBias: 1});
+        // environment.setMainColor(BABYLON.Color3.FromHexString("#74b9ff"))
+        scene.ambientColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+
         var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 2, 5, BABYLON.Vector3.Zero(), scene);
         camera.attachControl(canvas, false);
         var counter = 0;
@@ -191,16 +193,16 @@ window.addEventListener('DOMContentLoaded', function () {
 
         var particleNb = 22000;
         var SPS = new BABYLON.SolidParticleSystem('SPS', scene, {particleIntersection: true});
-        SPS.computeBoundingBox = false;
-        SPS.computeParticleColor = false;
-        SPS.billboard = true;
-        SPS.computeParticleRotation = false;
-        SPS.computeParticleTexture = false;
+        // SPS.computeBoundingBox = false;
+        // SPS.computeParticleColor = false;
+        // SPS.billboard = true;
+        // SPS.computeParticleRotation = false;
+        // SPS.computeParticleTexture = false;
         var disc = BABYLON.MeshBuilder.CreateBox("disc", {width: 0.01, height: .01, depth: .01}, scene);
-//       var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
-//       myMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0);
+      var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+      myMaterial.emissiveColor = new BABYLON.Color3(1, 255, 0);
 
-//       disc.material = myMaterial
+      disc.material = myMaterial
         SPS.addShape(disc, particleNb)
         disc.dispose();
 
@@ -221,15 +223,20 @@ window.addEventListener('DOMContentLoaded', function () {
         pl.specular = new BABYLON.Color3(1, 1, 1);
         pl.intensity = 0.8;
         shader();
-        var numImages1 = configuration["height"]
+        var numImages1 = configuration["numImages"]
         var imagesToRender = 20;
         var url = "static/wing/";
         var extension = ".png"
 
         var boxes = []
+        var parentForAll =BABYLON.MeshBuilder.CreatePlane("box23", {}, scene);
+        parentForAll.position = new BABYLON.Vector3(0,0,0)
+        parentForAll.isVisible = false;
+
+
         var shaderMaterials = []
 
-        for (var x = 100; x < 120; x++) {
+        for (var x = 1; x < numImages1-1; x+=20) {
             var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
                     vertex: "custom",
                     vertex: "custom",
@@ -251,54 +258,58 @@ window.addEventListener('DOMContentLoaded', function () {
             shaderMaterials.push(shaderMaterial);
 
             var box = BABYLON.MeshBuilder.CreatePlane("box", {width:configuration["width"]/numImages1, height:configuration["height"]/numImages1}, scene);
+            box.parent = parentForAll
             box.material = shaderMaterial;
-            box.setPositionWithLocalVector(new BABYLON.Vector3(0, 0, x / numImages1));
+            box.setPositionWithLocalVector(new BABYLON.Vector3(0, 0, 1-(x / numImages1)));
             box.isPickable = false;
             boxes.push(box);
 
         }
-        var numImages = configuration["width"]
-        for (var x = 100; x < 120; x++) {
-            var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
-                    vertex: "custom",
-                    vertex: "custom",
-                    fragment: "custom",
-                },
-                {
-                    attributes: ["position", "normal", "uv", "alphaCutoff"],
-                    uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
-                }
-            );
-
-
-            var mainTexture = new BABYLON.Texture("static/data/test/1/" + x + ".png", scene);
-            shaderMaterial.setTexture("textureSampler", mainTexture);
-            shaderMaterial.setFloat("time", 0);
-            shaderMaterial.setFloat("alphaCutoff", .3)
-            shaderMaterial.setVector3("cameraPosition", BABYLON.Vector3.Zero());
-            shaderMaterial.backFaceCulling = false;
-            shaderMaterials.push(shaderMaterial);
-
-            var box = BABYLON.MeshBuilder.CreatePlane("box", {width:configuration["width"]/numImages1, height:configuration["height"]/numImages1}, scene);
-            box.material = shaderMaterial;
-            box.rotate(BABYLON.Axis.X, Math.PI/2, BABYLON.Space.WORLD)
-            box.setPositionWithLocalVector(new BABYLON.Vector3(x/numImages1, 0,0));
-            box.isPickable = false;
-            boxes.push(box);
-
-        }
+        boxes[boxes.length-1].isVisible = false
+        boxes[0].isVisible = false
+        // var numImages = configuration["width"]
+        // for (var x = 1; x < numImages; x+=5) {
+        //     var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
+        //             vertex: "custom",
+        //             vertex: "custom",
+        //             fragment: "custom",
+        //         },
+        //         {
+        //             attributes: ["position", "normal", "uv", "alphaCutoff"],
+        //             uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
+        //         }
+        //     );
+        //
+        //
+        //     var mainTexture = new BABYLON.Texture("static/data/test/1/" + x + ".png", scene);
+        //     shaderMaterial.setTexture("textureSampler", mainTexture);
+        //     shaderMaterial.setFloat("time", 0);
+        //     shaderMaterial.setFloat("alphaCutoff", .3)
+        //     shaderMaterial.setVector3("cameraPosition", BABYLON.Vector3.Zero());
+        //     shaderMaterial.backFaceCulling = false;
+        //     shaderMaterials.push(shaderMaterial);
+        //
+        //     var box = BABYLON.MeshBuilder.CreatePlane("box", {width:configuration["width"]/numImages1, height:configuration["height"]/numImages1}, scene);
+        //     box.material = shaderMaterial;
+        //     box.rotate(BABYLON.Axis.X, Math.PI/2, BABYLON.Space.WORLD)
+        //     box.setPositionWithLocalVector(new BABYLON.Vector3(0,configuration["width"]/numImages1,x/numImages-configuration["height"]/(2*numImages1)));
+        //     // console.log(box.position)
+        //     box.isPickable = false;
+        //     boxes.push(box);
+        //
+        // }
         parentAll = function (controllerMesh) {
-            boxes.forEach((box, index) => {
-
-                controllerMesh.addChild(box)
-            })
-
+            // boxes.forEach((box, index) => {
+            //
+            //     controllerMesh.addChild(box)
+            // })
+            controllerMesh.addChild(parentForAll)
             controllerMesh.addChild(mesh2)
         }
         unparentAll = function (controllerMesh) {
-            boxes.forEach((box, index) => {
-                controllerMesh.removeChild(box)
-            })
+            // boxes.forEach((box, index) => {
+                controllerMesh.removeChild(parentForAll)
+            // })
             controllerMesh.removeChild(mesh2)
         }
 
@@ -335,19 +346,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
         var onControllerAttached = function (webVRController) {
 
-            var moveMesh = BABYLON.MeshBuilder.CreatePlane("box", {width: .1}, scene);
-            parentAll(moveMesh)
-            plane.setPositionWithLocalVector(webVRCamera.devicePosition.add(new BABYLON.Vector3(-1, 0, -1)));
-            moveMesh.setPositionWithLocalVector(webVRCamera.devicePosition.add(new BABYLON.Vector3(-.5, 0, -1)));
-            unparentAll(moveMesh);
-            moveMesh.dispose();
+            // var moveMesh = BABYLON.MeshBuilder.CreatePlane("box", {width: .1}, scene);
+            //             // parentAll(moveMesh)
+            //             // plane.setPositionWithLocalVector(webVRCamera.devicePosition.add(new BABYLON.Vector3(-1, 0, -1)));
+            //             // moveMesh.setPositionWithLocalVector(webVRCamera.devicePosition.add(new BABYLON.Vector3(-.5, 0, -1)));
+            //             // unparentAll(moveMesh);
+            //             // moveMesh.dispose();
             console.log(webVRController.hand + " controller ready.");
             if (webVRController.hand == "right") {
                 webVRCamera.rightController.onTriggerStateChangedObservable.add(function (stateObject) {
-                    console.log(stateObject)
-                    rightControllerEnabled = stateObject["pressedd"] // {x: 0.1, y: -0.3}
+                    rightControllerEnabled = stateObject["pressed"] // {x: 0.1, y: -0.3}
 
                 });
+
             }
             if (webVRController.hand == "left") {
                 console.log("Test")
@@ -379,6 +390,16 @@ window.addEventListener('DOMContentLoaded', function () {
                         unparentAll(webVRCamera.leftController.mesh)
                         leftMovement = false
                     }// {x: 0.1, y: -0.3}
+
+                });
+                webVRCamera.leftController.onSecondaryButtonStateChangedObservable.add(function (stateObject) {
+                    console.log(stateObject)
+                    if (stateObject["pressed"]&&leftMovement ) {
+                        console.log("Menu pressed")
+                        parentForAll.setPositionWithLocalVector(webVRCamera.leftController.position)
+                            mesh2.setPositionWithLocalVector(webVRCamera.leftController.position)
+
+                    }
 
                 });
             }

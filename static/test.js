@@ -1,1 +1,1 @@
-var configuration ={"numImages": 241, "height": 617, "width": 350}
+var configuration ={"numImages": 241, "height": 617, "width": 350, "file_path": "C:/Users/sschickler/Downloads/butterfly_wing_small.tif"}

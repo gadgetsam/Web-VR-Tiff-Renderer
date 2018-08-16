@@ -24,11 +24,12 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
     tiffarray = np.zeros((w, h, im.n_frames))
 
     try:
+        os.mkdir("static/data/" + filename + "/" + str(0))
         for i in range(im.n_frames):
             im.seek(im.tell()+1)
             image1 = misc.fromimage(im, flatten=1)
             tiffarray[:, :, i] = np.array(image1)
-            # misc.imsave("static/data/"+filename+"/"+str(im.tell())+".png", image1)
+            misc.imsave("static/data/test/0/"+str(im.tell())+".png", image1)
     except EOFError:
         pass # end of sequence
     dim = tiffarray.shape
@@ -54,4 +55,5 @@ def simple_slice(arr, inds, axis):
     sl[axis] = inds
     return arr[sl]
 # readTiff("butterfly_wing_small.tif")
+
 
