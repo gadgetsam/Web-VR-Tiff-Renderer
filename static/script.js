@@ -6,25 +6,41 @@ var shader = function () {
 
         "// Attributes\r\n" +
         "attribute vec3 position;\r\n" +
+        "vec3 planeVector = vec3(1,1,1);\r\n" +
         "attribute vec3 normal;\r\n" +
         "attribute vec2 uv;\r\n" +
 
         "// Uniforms\r\n" +
         "uniform mat4 worldViewProjection;\r\n" +
-
+        // "uniform vec3 planeOrigin;\r\n" +
+        // "uniform vec3 planeVector;\r\n" +
         "// Varying\r\n" +
         "varying vec2 vUV;\r\n" +
+        "varying float position2;\r\n" +
 
         "void main(void) {\r\n" +
-        "    vec4 outPosition = worldViewProjection * vec4(position, 1.0);\r\n" +
-        "    gl_Position = outPosition;\r\n" +
+        "    vec3 proj = dot(position, planeVector)/length(planeVector)*planeVector;\r\n" +
+        "    float d = dot(position, planeVector);\r\n" +
+        // "    if (d < 0.0) {\r\n" +
+        // "        valid = 0.0;\r\n" +
+        // "    }\r\n" +
+        //
+        // "    if (d >= 0.0) {\r\n" +
+        // "        valid = 1.0;\r\n" +
+        // "    }\r\n" +
+        //
+        // "    valid = 1.0;\r\n" +
 
+        "    vec4 outPosition = worldViewProjection * vec4(position, 1.0);\r\n" +
+        "    gl_Position = outPosition;\r\n"+
+        "    position2 = position\r\n" +
         "    vUV = uv;\r\n" +
         "}\r\n";
 
     BABYLON.Effect.ShadersStore["customFragmentShader"] = "precision highp float;\r\n" +
 
         "varying vec2 vUV;\r\n" +
+        "varying vec3 position;\r\n" +
 
         "// Refs\r\n" +
         "uniform sampler2D textureSampler;\r\n" +
@@ -32,8 +48,13 @@ var shader = function () {
 
         "void main(void) {\r\n" +
         "    vec3 color = texture2D(textureSampler, vUV).rgb;\r\n" +
-        "    \r\n" +
+        "     \r\n" +
         "    if (color.r < alphaCutoff) {\r\n" +
+        "        discard;\r\n" +
+        "    }\r\n" +
+        "    vec3 proj = dot(position, planeVector)/length(planeVector)*planeVector;\r\n" +
+        "    float d = dot(position, planeVector);\r\n" +
+        "    if (valid>0.0) {\r\n" +
         "        discard;\r\n" +
         "    }\r\n" +
         "    \r\n" +
@@ -238,7 +259,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         for (var x = 1; x < numImages1-1; x+=1) {
             var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
-                    vertex: "custom",
+
                     vertex: "custom",
                     fragment: "custom",
                 },
@@ -260,7 +281,7 @@ window.addEventListener('DOMContentLoaded', function () {
             var box = BABYLON.MeshBuilder.CreatePlane("box", {width:configuration["width"]/numImages1, height:configuration["height"]/numImages1}, scene);
             box.parent = parentForAll
             box.material = shaderMaterial;
-            box.setPositionWithLocalVector(new BABYLON.Vector3(0, 0, 1-(x / numImages1)));
+            box.setPositionWithLocalVector(new BABYLON.Vector3(-.5, -.5, 0-(x / numImages1)));
             box.isPickable = false;
             boxes.push(box);
 
