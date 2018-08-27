@@ -21,10 +21,12 @@ def add_header(r):
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
 def start():
-    app.run(debug=True, use_reloader=False, port=80)
+    app.run(debug=False, use_reloader=False, port=8080)
 
 
 
 
 
 
+if __name__ == "__main__":
+    start()

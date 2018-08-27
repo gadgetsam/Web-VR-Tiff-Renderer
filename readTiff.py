@@ -2,6 +2,7 @@ from PIL import Image
 import os
 import numpy as np
 import shutil
+import math
 from scipy import misc, ndimage, io
 import ntpath
 ntpath.basename("a/b/c")
@@ -29,7 +30,7 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
             im.seek(im.tell()+1)
             image1 = misc.fromimage(im, flatten=1)
             tiffarray[:, :, i] = np.array(image1)
-            misc.imsave("static/data/test/0/"+str(im.tell())+".png", image1)
+            # misc.imsave("static/data/test/0/"+str(im.tell())+".png", image1)
     except EOFError:
         pass # end of sequence
     dim = tiffarray.shape
@@ -37,10 +38,11 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
         misc.imsave("static/data/"+filename+"/"+str(1)+".png", simple_slice(tiffarray, math.floor(dim[axis]/2), axis))
     else:
         for i in range(1, dim[axis]+1):
-            updater.setValue(1/(dim[axis]+1))
+            updater.setValue((i/(dim[axis]+1))*100)
+
             misc.imsave("static/data/"+filename+"/"+str(i)+".png", simple_slice(tiffarray, i-1, axis))
 
-    infoFile = {"numImages":dim[axis]+1, "height":simple_slice(tiffarray, 0, axis), "width":simple_slice(tiffarray, 0, axis)}
+    infoFile = {"numImages":dim[axis]+1, "height":simple_slice(tiffarray, 0, axis).shape[0], "width":simple_slice(tiffarray, 0, axis).shape[1]}
     with open("static/test.js", 'w') as outfile:
         outfile.write("var configuration ="+str(json.dumps(infoFile)))
     # print(tiffarray)

@@ -236,7 +236,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         var shaderMaterials = []
 
-        for (var x = 1; x < numImages1-1; x+=20) {
+        for (var x = 1; x < numImages1-1; x+=1) {
             var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
                     vertex: "custom",
                     vertex: "custom",
@@ -249,7 +249,7 @@ window.addEventListener('DOMContentLoaded', function () {
             );
 
 
-            var mainTexture = new BABYLON.Texture("static/data/test/0/" + x + ".png", scene);
+            var mainTexture = new BABYLON.Texture("static/data/test/" + x + ".png", scene);
             shaderMaterial.setTexture("textureSampler", mainTexture);
             shaderMaterial.setFloat("time", 0);
             shaderMaterial.setFloat("alphaCutoff", .3)
@@ -267,37 +267,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
         boxes[boxes.length-1].isVisible = false
         boxes[0].isVisible = false
-        // var numImages = configuration["width"]
-        // for (var x = 1; x < numImages; x+=5) {
-        //     var shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
-        //             vertex: "custom",
-        //             vertex: "custom",
-        //             fragment: "custom",
-        //         },
-        //         {
-        //             attributes: ["position", "normal", "uv", "alphaCutoff"],
-        //             uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
-        //         }
-        //     );
-        //
-        //
-        //     var mainTexture = new BABYLON.Texture("static/data/test/1/" + x + ".png", scene);
-        //     shaderMaterial.setTexture("textureSampler", mainTexture);
-        //     shaderMaterial.setFloat("time", 0);
-        //     shaderMaterial.setFloat("alphaCutoff", .3)
-        //     shaderMaterial.setVector3("cameraPosition", BABYLON.Vector3.Zero());
-        //     shaderMaterial.backFaceCulling = false;
-        //     shaderMaterials.push(shaderMaterial);
-        //
-        //     var box = BABYLON.MeshBuilder.CreatePlane("box", {width:configuration["width"]/numImages1, height:configuration["height"]/numImages1}, scene);
-        //     box.material = shaderMaterial;
-        //     box.rotate(BABYLON.Axis.X, Math.PI/2, BABYLON.Space.WORLD)
-        //     box.setPositionWithLocalVector(new BABYLON.Vector3(0,configuration["width"]/numImages1,x/numImages-configuration["height"]/(2*numImages1)));
-        //     // console.log(box.position)
-        //     box.isPickable = false;
-        //     boxes.push(box);
-        //
-        // }
+
         parentAll = function (controllerMesh) {
             // boxes.forEach((box, index) => {
             //

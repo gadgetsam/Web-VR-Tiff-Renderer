@@ -15,12 +15,14 @@ Last edited: August 2017
 
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
                              QAction, QFileDialog, QApplication, QLabel, QProgressBar,QWidget, QPushButton, QLineEdit,
-    QFrame, QApplication)
+    QFrame, QApplication, QMessageBox)
 from PyQt5.QtGui import QIcon, QPixmap
 import PyQt5.QtGui
 import sys
-# import readTiff
+from main import start
+import readTiff
 
+import threading
 class Example(QMainWindow):
 
     def __init__(self):
@@ -30,7 +32,7 @@ class Example(QMainWindow):
 
     def initUI(self):
         self.fname= [False]
-
+        self.thread = False
         self.test = False
         self.statusBar()
 
@@ -65,8 +67,7 @@ class Example(QMainWindow):
         self.genB.setCheckable(True)
         self.genB.move(10, 190)
 
-
-        self.genB.clicked.connect(self.changeAxis)
+        self.genB.clicked.connect(self.genFull)
         self.progress = QProgressBar(self)
         self.progress.setValue(0)
         self.progress.setGeometry(10, 300, 475, 20)
@@ -92,7 +93,7 @@ class Example(QMainWindow):
 
 
 
-                pixmap = QPixmap("static/data/1.png")
+                pixmap = QPixmap("static/data/test/1.png")
                 self.label.setPixmap(pixmap)
 
             # self.resize(pixmap.width(), pixmap.height())
@@ -101,6 +102,7 @@ class Example(QMainWindow):
                 self.show()
                 # self.textEdit.setText(data)
     def reGenAxis(self, axis):
+
         if self.fname[0]:
             if self.test!= True:
                 readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=axis)
@@ -110,7 +112,7 @@ class Example(QMainWindow):
 
 
 
-                pixmap = QPixmap("static/data/1.png")
+                pixmap = QPixmap("static/data/test/1.png")
                 self.label.setPixmap(pixmap)
 
             # self.resize(pixmap.width(), pixmap.height())
@@ -118,7 +120,21 @@ class Example(QMainWindow):
 
                 self.show()
     def genFull(self, pressed):
-        readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis, updater = self.progress)
+        print("reading1")
+        if self.thread:
+            self.thread.end()
+        if self.fname[0]:
+            print("reading")
+            self.statusBar().showMessage('Generating')
+            readTiff.readTiff(self.fname[0], onlyOneFile=False, axis=self.currentAxis, updater = self.progress)
+        self.thread = threading.Thread(target=start, args=())
+        self.progress.setValue(0)
+        self.thread.daemon = True  # Daemonize thread
+        self.thread.start()
+        choice = QMessageBox.question(self, 'Open Vr',
+                                            "Type localhost:8080 into the webbrowser of your choice",
+                                            QMessageBox.Ok)
+
 
     def changeAxis(self, pressed):
 
