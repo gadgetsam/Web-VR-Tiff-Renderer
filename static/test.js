@@ -1,1 +1,1 @@
-var configuration ={"numImages": 351, "height": 617, "width": 241}
+var configuration ={"numImages": 242, "height": 617, "width": 350}

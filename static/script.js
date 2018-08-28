@@ -16,7 +16,7 @@ var shader = function () {
         // "uniform vec3 planeVector;\r\n" +
         "// Varying\r\n" +
         "varying vec2 vUV;\r\n" +
-        "varying float position2;\r\n" +
+        "varying vec3 position2;\r\n" +
 
         "void main(void) {\r\n" +
         "    vec3 proj = dot(position, planeVector)/length(planeVector)*planeVector;\r\n" +
@@ -33,15 +33,15 @@ var shader = function () {
 
         "    vec4 outPosition = worldViewProjection * vec4(position, 1.0);\r\n" +
         "    gl_Position = outPosition;\r\n"+
-        "    position2 = position\r\n" +
+        "    position2 = position;\r\n" +
         "    vUV = uv;\r\n" +
         "}\r\n";
 
     BABYLON.Effect.ShadersStore["customFragmentShader"] = "precision highp float;\r\n" +
 
         "varying vec2 vUV;\r\n" +
-        "varying vec3 position;\r\n" +
-
+        "varying vec3 position2;\r\n" +
+        "vec3 planeVector = vec3(1,1,1);\r\n" +
         "// Refs\r\n" +
         "uniform sampler2D textureSampler;\r\n" +
         "uniform float alphaCutoff;\r\n" +
@@ -52,9 +52,9 @@ var shader = function () {
         "    if (color.r < alphaCutoff) {\r\n" +
         "        discard;\r\n" +
         "    }\r\n" +
-        "    vec3 proj = dot(position, planeVector)/length(planeVector)*planeVector;\r\n" +
-        "    float d = dot(position, planeVector);\r\n" +
-        "    if (valid>0.0) {\r\n" +
+        "    vec3 proj = dot(position2, planeVector)/length(planeVector)*planeVector;\r\n" +
+        "    float d = dot(position2, planeVector);\r\n" +
+        "    if (d<0.0) {\r\n" +
         "        discard;\r\n" +
         "    }\r\n" +
         "    \r\n" +
