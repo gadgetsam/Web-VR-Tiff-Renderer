@@ -19,8 +19,8 @@ var shader = function () {
         "varying vec3 position2;\r\n" +
 
         "void main(void) {\r\n" +
-        "    vec3 proj = dot(position, planeVector)/length(planeVector)*planeVector;\r\n" +
-        "    float d = dot(position, planeVector);\r\n" +
+        // "    vec3 proj = dot(position, planeVector)/length(planeVector)*planeVector;\r\n" +
+        // "    float d = dot(position, planeVector);\r\n" +
         // "    if (d < 0.0) {\r\n" +
         // "        valid = 0.0;\r\n" +
         // "    }\r\n" +
@@ -41,19 +41,20 @@ var shader = function () {
 
         "varying vec2 vUV;\r\n" +
         "varying vec3 position2;\r\n" +
-        "vec3 planeVector = vec3(1,1,1);\r\n" +
+        // "vec3 planeVector = vec3(1,1,1);\r\n" +
         "// Refs\r\n" +
         "uniform sampler2D textureSampler;\r\n" +
         "uniform float alphaCutoff;\r\n" +
-
+        "uniform vec3 planeVector;\r\n" +
+        "uniform vec3 planePosition;\r\n" +
         "void main(void) {\r\n" +
         "    vec3 color = texture2D(textureSampler, vUV).rgb;\r\n" +
         "     \r\n" +
         "    if (color.r < alphaCutoff) {\r\n" +
         "        discard;\r\n" +
         "    }\r\n" +
-        "    vec3 proj = dot(position2, planeVector)/length(planeVector)*planeVector;\r\n" +
-        "    float d = dot(position2, planeVector);\r\n" +
+        "    vec3 proj = dot(position2-planePosition, planeVector)/length(planeVector)*planeVector;\r\n" +
+        "    float d = dot(position2-planePosition, planeVector);\r\n" +
         "    if (d<0.0) {\r\n" +
         "        discard;\r\n" +
         "    }\r\n" +
@@ -177,6 +178,15 @@ window.addEventListener('DOMContentLoaded', function () {
             }
             else {
                 lastPosition = 0
+                try{
+                console.log(webVRCamera.rightController.rawPose)
+                for (var x = 1; x < numImages1-1; x+=1) {
+                    shaderMaterials[x].setVector3("planeVector", new BABYLON.Vector3(webVRCamera.rightController.rawPose.orientation[1],webVRCamera.rightController.rawPose.orientation[2],webVRCamera.rightController.rawPose.orientation[3]));
+                    // shaderMaterials[x].setVector3("planePosition", webVRCamera.rightController.rawPose.position)
+                }
+                }
+                catch(err){}
+
 
             }
 
@@ -264,7 +274,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     fragment: "custom",
                 },
                 {
-                    attributes: ["position", "normal", "uv", "alphaCutoff"],
+                    attributes: ["position", "normal", "uv", "alphaCutoff", "planeVector", "planePosition"],
                     uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
                 }
             );
@@ -275,6 +285,8 @@ window.addEventListener('DOMContentLoaded', function () {
             shaderMaterial.setFloat("time", 0);
             shaderMaterial.setFloat("alphaCutoff", .3)
             shaderMaterial.setVector3("cameraPosition", BABYLON.Vector3.Zero());
+            shaderMaterial.setVector3("planeVector", new BABYLON.Vector3(4,.5,2));
+            shaderMaterial.setVector3("planePosition", new BABYLON.Vector3(0,0,0));
             shaderMaterial.backFaceCulling = false;
             shaderMaterials.push(shaderMaterial);
 
