@@ -14,7 +14,11 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
         pass
     filename = "test"
     im = Image.open(filepath)
+    try:
 
+        os.mkdir("static/data")
+    except:
+        pass
     try:
 
         os.mkdir("static/data/"+filename)
@@ -37,12 +41,12 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
     if onlyOneFile:
         misc.imsave("static/data/"+filename+"/"+str(1)+".png", simple_slice(tiffarray, math.floor(dim[axis]/2), axis))
     else:
-        for i in range(1, dim[axis]+1):
+        for i in range(20, dim[axis]+1):
             updater.setValue((i/(dim[axis]+1))*100)
 
-            misc.imsave("static/data/"+filename+"/"+str(i)+".png", simple_slice(tiffarray, i-1, axis))
+            misc.imsave("static/data/"+filename+"/"+str(i-20)+".png", simple_slice(tiffarray, i-1, axis))
 
-    infoFile = {"numImages":dim[axis]+1, "height":simple_slice(tiffarray, 0, axis).shape[0], "width":simple_slice(tiffarray, 0, axis).shape[1]}
+    infoFile = {"numImages":dim[axis]+1-20, "height":simple_slice(tiffarray, 0, axis).shape[0], "width":simple_slice(tiffarray, 0, axis).shape[1]}
     with open("static/test.js", 'w') as outfile:
         outfile.write("var configuration ="+str(json.dumps(infoFile)))
     # print(tiffarray)

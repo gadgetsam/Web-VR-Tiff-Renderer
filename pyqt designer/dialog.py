@@ -8,7 +8,13 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
+from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
+                             QAction, QFileDialog, QApplication, QLabel, QProgressBar,QWidget, QPushButton, QLineEdit,
+    QFrame, QApplication, QMessageBox)
+from PyQt5.QtGui import QIcon, QPixmap
+import PyQt5.QtGui
+import sys
+class Example(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(577, 443)
@@ -150,3 +156,7 @@ class Ui_Dialog(object):
 " to enter VR. "))
         self.label6a.setText(_translate("Dialog", "6."))
 
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
