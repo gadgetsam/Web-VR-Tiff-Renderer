@@ -16,7 +16,7 @@
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
-  <widget class="QPushButton" name="pushButton2b">
+  <widget class="QPushButton" name="yB">
    <property name="geometry">
     <rect>
      <x>90</x>
@@ -29,7 +29,7 @@
     <string>Y</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton2c">
+  <widget class="QPushButton" name="zB">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -84,7 +84,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton1a">
+  <widget class="QPushButton" name="fileOpenB">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -145,7 +145,7 @@
     <string>Choose orientation of stack</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton2a">
+  <widget class="QPushButton" name="xB">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -235,7 +235,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton4a">
+  <widget class="QPushButton" name="genB">
    <property name="geometry">
     <rect>
      <x>170</x>
