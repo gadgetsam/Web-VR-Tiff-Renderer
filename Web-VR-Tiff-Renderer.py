@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
 from PyQt5.QtGui import QIcon, QPixmap
 import PyQt5.QtGui
 import sys
-from main import start
+from server import start
 import readTiff
 
 import threading
@@ -34,15 +34,16 @@ class Example(QMainWindow):
         self.fname= [False]
         self.thread = False
         self.test = False
-        self.currentInvert = False
+        self.currentInvert = True
         self.currentColormap = 'Greys'
+        self.folder = False
         self.statusBar()
 
         openFile = QAction(QIcon('open.png'), 'Open', self)
         openFile.setShortcut('Ctrl+O')
         openFile.setStatusTip('Open new File')
 
-        openFile.triggered.connect(self.showDialog)
+        openFile.triggered.connect(self.showDialogFile)
         self.statusBar().showMessage('Current Axis is X')
         self.yB = QtWidgets.QPushButton(self)
         self.yB.setGeometry(QtCore.QRect(90, 120, 75, 23))
@@ -51,7 +52,7 @@ class Example(QMainWindow):
         self.zB.setGeometry(QtCore.QRect(170, 120, 75, 23))
         self.zB.setObjectName("zB")
         self.label1b = QtWidgets.QLabel(self)
-        self.label1b.setGeometry(QtCore.QRect(30, 20, 121, 31))
+        self.label1b.setGeometry(QtCore.QRect(30, 20, 271, 31))
         self.label1b.setStyleSheet("")
         self.label1b.setObjectName("label1b")
         self.photo = QtWidgets.QLabel(self)
@@ -66,8 +67,11 @@ class Example(QMainWindow):
         self.fileOpenB = QtWidgets.QPushButton(self)
         self.fileOpenB.setGeometry(QtCore.QRect(170, 50, 75, 23))
         self.fileOpenB.setObjectName("fileOpenB")
+        self.folderOpenB = QtWidgets.QPushButton(self)
+        self.folderOpenB .setGeometry(QtCore.QRect(90, 50, 75, 23))
+        self.folderOpenB.setObjectName("folderOpenB")
         self.label1a = QtWidgets.QLabel(self)
-        self.label1a.setGeometry(QtCore.QRect(10, 30, 47, 16))
+        self.label1a.setGeometry(QtCore.QRect(10, 30, 70, 16))
         self.label1a.setStyleSheet("font: bold 18px;")
         self.label1a.setObjectName("label1a")
         self.label2a = QtWidgets.QLabel(self)
@@ -154,6 +158,7 @@ class Example(QMainWindow):
         self.invertCheckbox = QtWidgets.QCheckBox(self)
         self.invertCheckbox.setGeometry(QtCore.QRect(200, 200, 70, 17))
         self.invertCheckbox.setObjectName("invertCheckbox")
+        self.invertCheckbox.setChecked(True)
         self.colorMapDropdown = QtWidgets.QComboBox(self)
         self.colorMapDropdown.setGeometry(QtCore.QRect(80, 200, 101, 22))
         self.colorMapDropdown.setObjectName("colorMapDropdown")
@@ -196,7 +201,10 @@ class Example(QMainWindow):
 
         self.genB.clicked.connect(self.genFull)
         self.fileOpenB.setCheckable(False)
-        self.fileOpenB.clicked.connect(self.showDialog)
+        self.fileOpenB.clicked.connect(self.showDialogFile)
+
+        self.folderOpenB.setCheckable(False)
+        self.folderOpenB.clicked.connect(self.showDialogFolder)
 
         # self.label = QLabel(self)
         # self.label.setGeometry(200, 40, 250, 250)
@@ -211,14 +219,15 @@ class Example(QMainWindow):
         # Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.yB.setText(_translate("Dialog", "Y"))
         self.zB.setText(_translate("Dialog", "Z"))
-        self.label1b.setText(_translate("Dialog", "Open .tif or .tiff file"))
-        self.fileOpenB.setText(_translate("Dialog", "Open"))
+        self.label1b.setText(_translate("Dialog", "Open .tif or .tiff file or folder of .tif or .tiff files"))
+        self.fileOpenB.setText(_translate("Dialog", "Open File"))
+        self.folderOpenB.setText(_translate("Dialog", "Open Folder"))
         self.label1a.setText(_translate("Dialog", "1. "))
         self.label2a.setText(_translate("Dialog", "2."))
         self.label2b.setText(_translate("Dialog", "Choose orientation of stack"))
         self.xB.setText(_translate("Dialog", "X"))
         self.label3a.setText(_translate("Dialog", "3."))
-        self.label3b.setText(_translate("Dialog", "Optional: Change the color map, open new color map file:"))
+        self.label3b.setText(_translate("Dialog", "Choose Colormap:"))
         self.genB.setText(_translate("Dialog", "Generate"))
         self.label4a.setText(_translate("Dialog", "4."))
         self.label4b.setText(_translate("Dialog", "Generate the visualization"))
@@ -230,32 +239,27 @@ class Example(QMainWindow):
         self.label6a.setText(_translate("Dialog", "6."))
         self.invertCheckbox.setText(_translate("Dialog", "Invert"))
 
-    def showDialog(self):
-        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\Users\\gadge\\Downloads\\als')
+    def showDialogFile(self):
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\Users\\gadge\\Downloads\\als')[0]
         print(self.fname)
-        if self.fname[0]:
-            if self.test!= True:
-                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis, invert=self.currentInvert, colormap = self.currentColormap)
-
-
-
-
-
-
-                pixmap = QPixmap("static/data/test/1.png")
-                self.photo.setPixmap(pixmap)
-
-            # self.resize(pixmap.width(), pixmap.height())
-
-
-                self.show()
+        if self.fname:
+            self.folder = False
+            self.reGenImage()
                 # self.textEdit.setText(data)
+
+    def showDialogFolder(self):
+        self.fname = QFileDialog.getExistingDirectory(self, 'Open file', 'C:\\Users\\gadge\\Downloads\\als')
+
+        print(self.fname)
+        if self.fname:
+            self.folder = True
+            self.reGenImage()
 
     def reGenImage(self):
 
         if self.fname[0]:
             if self.test!= True:
-                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis, invert=self.currentInvert, colormap = self.currentColormap)
+                readTiff.readTiff(self.fname, onlyOneFile=True, axis=self.currentAxis, invert=self.currentInvert, colormap = self.currentColormap,folder=self.folder)
 
 
 
@@ -279,7 +283,7 @@ class Example(QMainWindow):
         if self.fname[0]:
             print("reading")
             self.statusBar().showMessage('Generating')
-            readTiff.readTiff(self.fname[0], onlyOneFile=False, axis=self.currentAxis, updater = self.progressBar)
+            readTiff.readTiff(self.fname, onlyOneFile=False, axis=self.currentAxis, updater = self.progressBar, invert=self.currentInvert, colormap = self.currentColormap,folder=self.folder)
         self.thread = threading.Thread(target=start, args=())
         self.progressBar.setValue(0)
         self.thread.daemon = True  # Daemonize thread
