@@ -10,7 +10,7 @@ from scipy import misc, ndimage, io
 import ntpath
 ntpath.basename("a/b/c")
 import json
-def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
+def readTiff(filepath, onlyOneFile=True, axis=0,updater=None, colormap='Greys',invert=False):
     try:
         shutil.rmtree("static/data/test")
     except:
@@ -41,7 +41,8 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
     except EOFError:
         pass # end of sequence
     dim = tiffarray.shape
-    cm_hot = mpl.cm.get_cmap('plasma')
+    cm_hot = mpl.cm.get_cmap(colormap + ("_r" if invert else ""))
+
     if onlyOneFile:
 
         misc.imsave("static/data/"+filename+"/"+str(1)+".png", cm_hot(simple_slice(tiffarray, math.floor(dim[axis]/2), axis)))

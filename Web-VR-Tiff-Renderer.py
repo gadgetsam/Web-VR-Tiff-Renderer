@@ -34,6 +34,8 @@ class Example(QMainWindow):
         self.fname= [False]
         self.thread = False
         self.test = False
+        self.currentInvert = False
+        self.currentColormap = 'Greys'
         self.statusBar()
 
         openFile = QAction(QIcon('open.png'), 'Open', self)
@@ -93,9 +95,7 @@ class Example(QMainWindow):
         self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
-        self.pushButton3a = QtWidgets.QPushButton(self)
-        self.pushButton3a.setGeometry(QtCore.QRect(170, 200, 75, 23))
-        self.pushButton3a.setObjectName("pushButton3a")
+
         self.line_3 = QtWidgets.QFrame(self)
         self.line_3.setGeometry(QtCore.QRect(10, 220, 301, 16))
         self.line_3.setStyleSheet("")
@@ -151,6 +151,38 @@ class Example(QMainWindow):
         self.progressBar.setGeometry(QtCore.QRect(20, 410, 271, 23))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
+        self.invertCheckbox = QtWidgets.QCheckBox(self)
+        self.invertCheckbox.setGeometry(QtCore.QRect(200, 200, 70, 17))
+        self.invertCheckbox.setObjectName("invertCheckbox")
+        self.colorMapDropdown = QtWidgets.QComboBox(self)
+        self.colorMapDropdown.setGeometry(QtCore.QRect(80, 200, 101, 22))
+        self.colorMapDropdown.setObjectName("colorMapDropdown")
+
+        cmaps = [
+            'Greys','viridis', 'plasma', 'inferno', 'magma',
+
+                      'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
+                     'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
+                     'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn',
+
+                     'binary', 'gist_yarg', 'gist_gray', 'gray', 'bone', 'pink',
+                     'spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia',
+                     'hot', 'afmhot', 'gist_heat', 'copper',
+                     'PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdGy', 'RdBu',
+                     'RdYlBu', 'RdYlGn', 'Spectral', 'coolwarm', 'bwr', 'seismic',
+                     'Pastel1', 'Pastel2', 'Paired', 'Accent',
+                     'Dark2', 'Set1', 'Set2', 'Set3',
+                     'tab10', 'tab20', 'tab20b', 'tab20c',
+                     'flag', 'prism', 'ocean', 'gist_earth', 'terrain', 'gist_stern',
+                     'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg', 'hsv',
+                     'gist_rainbow', 'rainbow', 'jet', 'nipy_spectral', 'gist_ncar']
+        for x in cmaps:
+            self.colorMapDropdown.addItem(x)
+
+        self.colorMapDropdown.activated[str].connect(self.changeColorMap)
+
+        self.invertCheckbox.stateChanged.connect(self.changeInvert)
+
         self.xB.setCheckable(False)
 
         self.xB.clicked.connect(self.changeAxis)
@@ -187,7 +219,6 @@ class Example(QMainWindow):
         self.xB.setText(_translate("Dialog", "X"))
         self.label3a.setText(_translate("Dialog", "3."))
         self.label3b.setText(_translate("Dialog", "Optional: Change the color map, open new color map file:"))
-        self.pushButton3a.setText(_translate("Dialog", "Open"))
         self.genB.setText(_translate("Dialog", "Generate"))
         self.label4a.setText(_translate("Dialog", "4."))
         self.label4b.setText(_translate("Dialog", "Generate the visualization"))
@@ -197,13 +228,14 @@ class Example(QMainWindow):
         self.label6b.setText(_translate("Dialog", "Click the glasses icon on the lower right hand corner\n"
                                                   " to enter VR. "))
         self.label6a.setText(_translate("Dialog", "6."))
+        self.invertCheckbox.setText(_translate("Dialog", "Invert"))
 
     def showDialog(self):
         self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\Users\\gadge\\Downloads\\als')
         print(self.fname)
         if self.fname[0]:
             if self.test!= True:
-                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis)
+                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis, invert=self.currentInvert, colormap = self.currentColormap)
 
 
 
@@ -218,11 +250,12 @@ class Example(QMainWindow):
 
                 self.show()
                 # self.textEdit.setText(data)
-    def reGenAxis(self, axis):
+
+    def reGenImage(self):
 
         if self.fname[0]:
             if self.test!= True:
-                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=axis)
+                readTiff.readTiff(self.fname[0], onlyOneFile=True, axis=self.currentAxis, invert=self.currentInvert, colormap = self.currentColormap)
 
 
 
@@ -255,7 +288,12 @@ class Example(QMainWindow):
                                             "Type localhost:8080 into the webbrowser of your choice",
                                             QMessageBox.Ok)
 
-
+    def changeColorMap(self,text):
+        self.currentColormap =text
+        self.reGenImage()
+    def changeInvert(self,state):
+        self.currentInvert = state
+        self.reGenImage()
     def changeAxis(self, pressed):
 
         source = self.sender()
@@ -263,25 +301,28 @@ class Example(QMainWindow):
         # source.toggle()
         if source.text() == "X":
             self.statusBar().showMessage('Current Dimension is X')
-            self.reGenAxis(0)
-
             self.currentAxis = 0
+            self.reGenImage()
+
+
 
         if source.text() == "Y":
             # if self.currentAxis == 1:
             #     print(self.currentAxis)
                 # self.xyzB[self.currentAxis].toggle()
-            self.reGenAxis(1)
-            self.statusBar().showMessage('Current Dimension is Y')
             self.currentAxis = 1
+            self.reGenImage()
+            self.statusBar().showMessage('Current Dimension is Y')
+
 
         if source.text() == "Z":
 
             # if self.currentAxis == 2:
                 # self.xyzB[self.currentAxis].toggle()
-            self.reGenAxis(2)
-            self.statusBar().showMessage('Current Dimension is Z')
             self.currentAxis = 2
+            self.reGenImage()
+            self.statusBar().showMessage('Current Dimension is Z')
+
 
 
 if __name__ == '__main__':
