@@ -6,17 +6,17 @@ Web VR Tiff Renderer allows you to easily view your tiff stacks in VR. It can ta
 
 Web VR Tiff Renderer is tested on Python 3.7.1.
 
-First make sure you have all the packages:
+First download the repo and cd into it:
+
+Then make sure you have all the packages:
 > pip install -r requirements.txt
-
-Then run the script to open the GUI interface
->python Web-VR-Tiff-Renderer.py  
-
-Make sure to use the correct browser to insure compatibility with your headset: Chrome for Vive/Oculus and Edge for Windows Mixed Reality
-
+ 
 ## Tutorial:
 
-Once you open the app follow the numbered directions to get the model into VR. The first thing to do when you enter VR is to bring the model towards you, to do this hold down the trigger and menu button(B button on Oculus Rift) on the right controller at the same time. To move the model around hold the right controller’s trigger and move your right hand in the direction you want to move it. 
+Run the script to open the GUI interface
+>python Web-VR-Tiff-Renderer.py  
+
+Once you open the app follow the numbered directions to get the model into VR. Make sure to use the correct browser to insure compatibility with your headset: Chrome for Vive/Oculus and Edge for Windows Mixed Reality. The first thing to do when you enter VR is to bring the model towards you, to do this hold down the trigger and menu button(B button on Oculus Rift) on the right controller at the same time. To move the model around hold the right controller’s trigger and move your right hand in the direction you want to move it. 
 
 ## Rendering Method:
 
