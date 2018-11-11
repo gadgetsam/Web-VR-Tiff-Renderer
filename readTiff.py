@@ -3,6 +3,9 @@ import os
 import numpy as np
 import shutil
 import math
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 from scipy import misc, ndimage, io
 import ntpath
 ntpath.basename("a/b/c")
@@ -38,13 +41,15 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None):
     except EOFError:
         pass # end of sequence
     dim = tiffarray.shape
+    cm_hot = mpl.cm.get_cmap('plasma')
     if onlyOneFile:
-        misc.imsave("static/data/"+filename+"/"+str(1)+".png", simple_slice(tiffarray, math.floor(dim[axis]/2), axis))
+
+        misc.imsave("static/data/"+filename+"/"+str(1)+".png", cm_hot(simple_slice(tiffarray, math.floor(dim[axis]/2), axis)))
     else:
         for i in range(20, dim[axis]+1):
             updater.setValue((i/(dim[axis]+1))*100)
 
-            misc.imsave("static/data/"+filename+"/"+str(i-20)+".png", simple_slice(tiffarray, i-1, axis))
+            misc.imsave("static/data/"+filename+"/"+str(i-20)+".png", cm_hot(simple_slice(tiffarray, i-1, axis)))
 
     infoFile = {"numImages":dim[axis]+1-20, "height":simple_slice(tiffarray, 0, axis).shape[0], "width":simple_slice(tiffarray, 0, axis).shape[1]}
     with open("static/test.js", 'w') as outfile:

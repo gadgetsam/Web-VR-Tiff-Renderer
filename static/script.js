@@ -33,7 +33,7 @@ var shader = function () {
         "void main(void) {\r\n" +
         "    vec3 color = texture2D(textureSampler, vUV).rgb;\r\n" +
         "    \r\n" +
-        "    if (color.r < alphaCutoff) {\r\n" +
+        "    if (color.r+color.b+color.g < 3.0*alphaCutoff) {\r\n" +
         "        discard;\r\n" +
         "    }\r\n" +
         "    \r\n" +

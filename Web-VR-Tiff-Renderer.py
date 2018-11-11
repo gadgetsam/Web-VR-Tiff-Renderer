@@ -199,7 +199,7 @@ class Example(QMainWindow):
         self.label6a.setText(_translate("Dialog", "6."))
 
     def showDialog(self):
-        self.fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\Users\\gadge\\Downloads\\als')
         print(self.fname)
         if self.fname[0]:
             if self.test!= True:
