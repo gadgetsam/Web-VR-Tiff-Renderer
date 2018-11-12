@@ -219,28 +219,28 @@ class Example(QMainWindow):
         # Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.yB.setText(_translate("Dialog", "Y"))
         self.zB.setText(_translate("Dialog", "Z"))
-        self.label1b.setText(_translate("Dialog", "Open .tif or .tiff file or folder of .tif or .tiff files"))
+        self.label1b.setText(_translate("Dialog", "Open .tiff file or folder of .tiff files:"))
         self.fileOpenB.setText(_translate("Dialog", "Open File"))
         self.folderOpenB.setText(_translate("Dialog", "Open Folder"))
         self.label1a.setText(_translate("Dialog", "1. "))
         self.label2a.setText(_translate("Dialog", "2."))
-        self.label2b.setText(_translate("Dialog", "Choose orientation of stack"))
+        self.label2b.setText(_translate("Dialog", "Choose orientation of stack:"))
         self.xB.setText(_translate("Dialog", "X"))
         self.label3a.setText(_translate("Dialog", "3."))
         self.label3b.setText(_translate("Dialog", "Choose Colormap:"))
         self.genB.setText(_translate("Dialog", "Generate"))
         self.label4a.setText(_translate("Dialog", "4."))
-        self.label4b.setText(_translate("Dialog", "Generate the visualization"))
+        self.label4b.setText(_translate("Dialog", "Generate the visualization:"))
         self.label5a.setText(_translate("Dialog", "5."))
         self.label5b.setText(_translate("Dialog", "Go to localhost:8080 on your browser\n"
                                                   "Make sure to use the correct browser for your headset\n"
-                                                  "Chrome for Vive/Oculus and Edge for Windows Mixed Reality\n"))
-        self.label6b.setText(_translate("Dialog", "Click the glasses icon on the lower right hand corner \n"
+                                                  "(Chrome for Vive/Oculus and Edge for Windows Mixed Reality)\n"))
+        self.label6b.setText(_translate("Dialog", "Click the glasses icon in the lower right hand corner \n"
                                                   "to enter VR. To bring the model towards you, hold down\n"
-                                                  "the trigger and menu button(B button on Oculus Rift)\n"
+                                                  "the trigger and menu buttons (B button on Oculus Rift)\n"
                                                   "on the right controller at the same time. To move the \n"
-                                                  "model around hold the right controller’s trigger and move\n"
-                                                  "your right hand in the direction you want to move it."
+                                                  "model hold the right controller’s trigger and move\n"
+                                                  "your right hand in the direction you want to move the model."
                                         ))
         self.label6a.setText(_translate("Dialog", "6."))
         self.invertCheckbox.setText(_translate("Dialog", "Invert"))
