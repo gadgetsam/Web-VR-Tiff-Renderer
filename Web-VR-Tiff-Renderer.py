@@ -128,31 +128,31 @@ class Example(QMainWindow):
         self.label5a.setStyleSheet("font: bold 18px;")
         self.label5a.setObjectName("label5a")
         self.line_5 = QtWidgets.QFrame(self)
-        self.line_5.setGeometry(QtCore.QRect(10, 340, 301, 16))
+        self.line_5.setGeometry(QtCore.QRect(10, 350, 301, 16))
         self.line_5.setStyleSheet("")
         self.line_5.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_5.setObjectName("line_5")
         self.label5b = QtWidgets.QLabel(self)
-        self.label5b.setGeometry(QtCore.QRect(30, 300, 261, 41))
+        self.label5b.setGeometry(QtCore.QRect(30, 300, 291, 61))
         self.label5b.setStyleSheet("")
         self.label5b.setObjectName("label5b")
         self.label6b = QtWidgets.QLabel(self)
-        self.label6b.setGeometry(QtCore.QRect(30, 350, 261, 41))
+        self.label6b.setGeometry(QtCore.QRect(30, 360, 291, 90))
         self.label6b.setStyleSheet("")
         self.label6b.setObjectName("label6b")
         self.label6a = QtWidgets.QLabel(self)
-        self.label6a.setGeometry(QtCore.QRect(10, 360, 47, 21))
+        self.label6a.setGeometry(QtCore.QRect(10, 370, 47, 21))
         self.label6a.setStyleSheet("font: bold 18px;")
         self.label6a.setObjectName("label6a")
         self.line_7 = QtWidgets.QFrame(self)
-        self.line_7.setGeometry(QtCore.QRect(10, 390, 301, 16))
+        self.line_7.setGeometry(QtCore.QRect(10, 450, 301, 16))
         self.line_7.setStyleSheet("")
         self.line_7.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_7.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_7.setObjectName("line_7")
         self.progressBar = QtWidgets.QProgressBar(self)
-        self.progressBar.setGeometry(QtCore.QRect(20, 410, 271, 23))
+        self.progressBar.setGeometry(QtCore.QRect(20, 470, 271, 23))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         self.invertCheckbox = QtWidgets.QCheckBox(self)
@@ -208,8 +208,8 @@ class Example(QMainWindow):
 
         # self.label = QLabel(self)
         # self.label.setGeometry(200, 40, 250, 250)
-        self.setGeometry(50,50,583, 455)
-        self.setWindowTitle('File dialog')
+        self.setGeometry(50,50,583, 515)
+        self.setWindowTitle('WebVR Tiff Renderer')
         self.xyzB = [self.xB, self.yB, self.zB]
         self.retranslateUi()
         self.show()
@@ -232,10 +232,16 @@ class Example(QMainWindow):
         self.label4a.setText(_translate("Dialog", "4."))
         self.label4b.setText(_translate("Dialog", "Generate the visualization"))
         self.label5a.setText(_translate("Dialog", "5."))
-        self.label5b.setText(_translate("Dialog", "Go to localhost:8080 on your browser of choice\n"
-                                                  " Chrome for Vive/Oculus and Edge for Windows Mixed Reality"))
-        self.label6b.setText(_translate("Dialog", "Click the glasses icon on the lower right hand corner\n"
-                                                  " to enter VR. "))
+        self.label5b.setText(_translate("Dialog", "Go to localhost:8080 on your browser\n"
+                                                  "Make sure to use the correct browser for your headset\n"
+                                                  "Chrome for Vive/Oculus and Edge for Windows Mixed Reality\n"))
+        self.label6b.setText(_translate("Dialog", "Click the glasses icon on the lower right hand corner \n"
+                                                  "to enter VR. To bring the model towards you, hold down\n"
+                                                  "the trigger and menu button(B button on Oculus Rift)\n"
+                                                  "on the right controller at the same time. To move the \n"
+                                                  "model around hold the right controller’s trigger and move\n"
+                                                  "your right hand in the direction you want to move it."
+                                        ))
         self.label6a.setText(_translate("Dialog", "6."))
         self.invertCheckbox.setText(_translate("Dialog", "Invert"))
 
