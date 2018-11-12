@@ -14,6 +14,10 @@ Then make sure you have all the packages:
 Run the script to open the GUI interface
 >python Web-VR-Tiff-Renderer.py  
 
+## Colormaps:
+
+A list of all avaliable colormaps is avaliable here: https://matplotlib.org/examples/color/colormaps_reference.html
+
 ## Rendering Method:
 
 We use a sliced rendering method for ease of computation. This sliced rendering method comes with a few drawbacks. One, when you look at the slices from the side it is the model disappears this is because the slices have no horizontal dimensions. To overcome this drawback you can change the orientation in the GUI for the app. 
