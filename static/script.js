@@ -291,6 +291,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var header = new BABYLON.GUI.TextBlock();
         header.text = "Change threshold";
         header.height = "240px";
+        header.width = "1500px"
         header.color = "white";
         header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         header.fontSize = "120"
@@ -301,8 +302,8 @@ window.addEventListener('DOMContentLoaded', function () {
         slider.maximum = 1;
         slider.color = "green";
         slider.value = .3;
-        slider.height = "300px";
-        slider.width = "600px";
+        slider.height = "500px";
+        slider.width = "2000px";
         panel.addControl(slider);
 
         slider.onValueChangedObservable.add(function (value) {
