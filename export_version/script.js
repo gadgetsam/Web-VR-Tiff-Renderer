@@ -281,27 +281,27 @@ window.addEventListener('DOMContentLoaded', function () {
             controllerMesh.removeChild(mesh2)
         }
 
-        var plane = BABYLON.Mesh.CreatePlane("plane", 1);
+        var plane = BABYLON.Mesh.CreatePlane("plane", 5);
         plane.position = new BABYLON.Vector3(0.1, 2, 0.1)
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(plane);
         var panel = new BABYLON.GUI.StackPanel();
         advancedTexture.addControl(panel);
         var header = new BABYLON.GUI.TextBlock();
         header.text = "Change threshold";
-        header.height = "240px";
-        header.width = "1500px"
         header.color = "white";
+        header.height = "100px"
         header.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-        header.fontSize = "120"
+        header.fontSize = "75"
         panel.addControl(header);
         var slider = new BABYLON.GUI.Slider();
         slider.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         slider.minimum = 0;
         slider.maximum = 1;
+        slider.bottom = "100px";
         slider.color = "green";
         slider.value = .3;
         slider.height = "500px";
-        slider.width = "2000px";
+        slider.width = "4000px";
         panel.addControl(slider);
 
         slider.onValueChangedObservable.add(function (value) {
