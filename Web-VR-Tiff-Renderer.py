@@ -21,6 +21,8 @@ import PyQt5.QtGui
 import sys
 from server import start
 import readTiff
+import shutil
+import os
 
 import threading
 class Example(QMainWindow):
@@ -56,7 +58,7 @@ class Example(QMainWindow):
         self.label1b.setStyleSheet("")
         self.label1b.setObjectName("label1b")
         self.photo = QtWidgets.QLabel(self)
-        self.photo.setGeometry(QtCore.QRect(320, 10, 256, 431))
+        self.photo.setGeometry(QtCore.QRect(350, 10, 256, 401))
         self.photo.setObjectName("photo")
         self.line = QtWidgets.QFrame(self)
         self.line.setGeometry(QtCore.QRect(10, 70, 301, 16))
@@ -109,6 +111,9 @@ class Example(QMainWindow):
         self.genB = QtWidgets.QPushButton(self)
         self.genB.setGeometry(QtCore.QRect(170, 270, 75, 23))
         self.genB.setObjectName("genB")
+        self.exportB = QtWidgets.QPushButton(self)
+        self.exportB.setGeometry(QtCore.QRect(90, 270, 75, 23))
+        self.exportB.setObjectName("exportB")
         self.label4a = QtWidgets.QLabel(self)
         self.label4a.setGeometry(QtCore.QRect(10, 240, 47, 21))
         self.label4a.setStyleSheet("font: bold 18px;")
@@ -134,7 +139,7 @@ class Example(QMainWindow):
         self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_5.setObjectName("line_5")
         self.label5b = QtWidgets.QLabel(self)
-        self.label5b.setGeometry(QtCore.QRect(30, 300, 291, 61))
+        self.label5b.setGeometry(QtCore.QRect(30, 300, 310, 61))
         self.label5b.setStyleSheet("")
         self.label5b.setObjectName("label5b")
         self.label6b = QtWidgets.QLabel(self)
@@ -200,6 +205,7 @@ class Example(QMainWindow):
         self.zB.clicked.connect(self.changeAxis)
 
         self.genB.clicked.connect(self.genFull)
+        self.exportB.clicked.connect(self.exportFull)
         self.fileOpenB.setCheckable(False)
         self.fileOpenB.clicked.connect(self.showDialogFile)
 
@@ -229,11 +235,12 @@ class Example(QMainWindow):
         self.label3a.setText(_translate("Dialog", "3."))
         self.label3b.setText(_translate("Dialog", "Choose Colormap:"))
         self.genB.setText(_translate("Dialog", "Generate"))
+        self.exportB.setText(_translate("Dialog", "Export"))
         self.label4a.setText(_translate("Dialog", "4."))
-        self.label4b.setText(_translate("Dialog", "Generate the visualization:"))
+        self.label4b.setText(_translate("Dialog", "Generate or export the visualization:"))
         self.label5a.setText(_translate("Dialog", "5."))
-        self.label5b.setText(_translate("Dialog", "Go to localhost:8080 on your browser\n"
-                                                  "Make sure to use the correct browser for your headset\n"
+        self.label5b.setText(_translate("Dialog", "If you generated the visualization, Go to localhost:8080 on your \n"
+                                                  "browser Make sure to use the correct browser for your headset\n"
                                                   "(Chrome for Vive/Oculus and Edge for Windows Mixed Reality)\n"))
         self.label6b.setText(_translate("Dialog", "Click the glasses icon in the lower right hand corner \n"
                                                   "to enter VR. To bring the model towards you, hold down\n"
@@ -246,7 +253,7 @@ class Example(QMainWindow):
         self.invertCheckbox.setText(_translate("Dialog", "Invert"))
 
     def showDialogFile(self):
-        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\Users\\gadge\\Downloads\\als')[0]
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\Users\\gadge\\Desktop\\als\ndata\n2017\\')[0]
         print(self.fname)
         if self.fname:
             self.folder = False
@@ -297,7 +304,46 @@ class Example(QMainWindow):
         choice = QMessageBox.question(self, 'Open Vr',
                                             "Type localhost:8080 into the webbrowser of your choice",
                                             QMessageBox.Ok)
+    def exportFull(self, pressed):
+        folder = QFileDialog.getExistingDirectory(self, 'Select Directory to export to:', 'C:\\Users\\gadge\\Desktop\\als\ndata\n2017\\')
+        print(folder)
+        if folder:
+            print("Test")
 
+        if self.thread:
+            try:
+                self.thread.end()
+            except:
+                pass
+        if self.fname[0]:
+            print("reading")
+
+            self.statusBar().showMessage('Generating')
+            readTiff.readTiff(self.fname, onlyOneFile=False, axis=self.currentAxis, updater = self.progressBar, invert=self.currentInvert, colormap = self.currentColormap,folder=self.folder)
+
+            n=0
+            while n<1000:
+                n +=1
+                try:
+                    self.copy("export_version", os.path.join(folder, "VR_Export_%s" %(n)))
+                    self.copy("static/data", os.path.join(folder,"VR_Export_%s/data" %(n)))
+                    break
+                except:
+                    pass
+            try:
+                shutil.rmtree("static/data/test")
+            except:
+                pass
+            self.progressBar.setValue(0)
+            choice = QMessageBox.question(self, 'Export finished',
+                                          "Run using the html server of your choice",
+                                          QMessageBox.Ok)
+
+
+        # if self.fname:
+
+    def copy(self, src, dest):
+            shutil.copytree(src, dest)
     def changeColorMap(self,text):
         self.currentColormap =text
         self.reGenImage()

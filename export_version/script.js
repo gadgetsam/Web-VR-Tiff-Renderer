@@ -224,9 +224,7 @@ window.addEventListener('DOMContentLoaded', function () {
         pl.intensity = 0.8;
         shader();
         var numImages1 = configuration["numImages"]
-        var imagesToRender = 20;
-        var url = "static/wing/";
-        var extension = ".png"
+
 
         var boxes = []
         var parentForAll =BABYLON.MeshBuilder.CreatePlane("box23", {}, scene);
@@ -249,7 +247,7 @@ window.addEventListener('DOMContentLoaded', function () {
             );
 
 
-            var mainTexture = new BABYLON.Texture("static/data/test/" + x + ".png", scene);
+            var mainTexture = new BABYLON.Texture("data/test/" + x + ".png", scene);
             shaderMaterial.setTexture("textureSampler", mainTexture);
             shaderMaterial.setFloat("time", 0);
             shaderMaterial.setFloat("alphaCutoff", .3)
@@ -378,7 +376,7 @@ window.addEventListener('DOMContentLoaded', function () {
         vrHelper.onControllerMeshLoaded.add(onControllerAttached);
         vrHelper.onEnteringVRObservable.add(() => {
 
-            console.log("ran")
+
         })
         return scene;
     };
