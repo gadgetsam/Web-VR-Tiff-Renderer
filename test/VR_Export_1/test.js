@@ -1,0 +1,1 @@
+var configuration ={"numImages": 128, "height": 375, "width": 165}

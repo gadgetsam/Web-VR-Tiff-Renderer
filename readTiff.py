@@ -4,6 +4,7 @@ import numpy as np
 import shutil
 import math
 import matplotlib as mpl
+import tifffile
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from scipy import misc, ndimage, io
@@ -52,22 +53,18 @@ def readTiff(filepath, onlyOneFile=True, axis=0,updater=None, colormap='Greys',i
 
     else:
 
-        try:
-            im = Image.open(filepath)
-            h, w = im.width, im.height
-            tiffarray = np.zeros((w, h, im.n_frames, 4))
+        # try:
+
+            tiffarray = tifffile.imread(filepath)
             cm_hot = mpl.cm.get_cmap(colormap + ("_r" if invert else ""))
             os.mkdir("static/data/" + filename + "/" + str(0))
-            for i in range(im.n_frames):
-                im.seek(im.tell() + 1)
-                image1 = np.array(im)
-                image1 = cm_hot(image1)
-                image1 = np.uint8(image1 * 255)
-                # image1 = misc.fromimage(im, flatten=1)
-                tiffarray[:, :, i] = np.array(image1)
+            tiffarray = np.uint8(tiffarray * 255)
+
+                # print(tiffarray.shape)
                 # misc.imsave("static/data/test/0/"+str(im.tell())+".png", image1)
-        except EOFError:
-            pass  # end of sequence
+        # except EOFError as e:
+        #     print(e)
+        #     pass  # end of sequence
 
     dim = tiffarray.shape
 
@@ -98,8 +95,11 @@ def simple_slice(arr, inds, axis):
     sl[axis] = inds
     return arr[sl]
 # readTiff("butterfly_wing_small.tif")
-filepath = "C:\\Users\\gadge\\Downloads\\als\\New Folder With Items"
+
+filepath = "C:\\Users\\gadge\\Downloads\\test2\\test2.tif"
 colormap="Greys"
 filename ="test"
 invert =True
-
+# test = tifffile.imread(filepath)
+# readTiff(filepath, onlyOneFile=False, axis=2,
+#                   invert=False)
